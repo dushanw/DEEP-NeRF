@@ -10,8 +10,8 @@ addpath('././_custom_layers/')
 
 %% parameter initialization
 % data parameter
-pram.datasetId  = 'sim-cell';
-pram.rsf        = 0.25;                        % down samples the system (H,I,J) by this factor
+pram.datasetId  = 'data-20220608';             %{'sim-cell','data-20220608'}
+pram.rsf        = 1/8;                         % down samples the system (H,I,J) by this factor
 pram.NyI        = 128; 
 pram.NxI        = 128; 
 pram.n          = 4;
@@ -25,21 +25,21 @@ pram.maxJ       = pram.maxI*pram.n^2;         % photons per petterned-image per 
 
 % MLP embedding parameters 
 pram.Nmap       = 256;
-pram.Bscal      = 10;
+pram.Bscal      = .1;
 
 % MLP training parameter
 pram.fracTr             = 1;              % ratio of training data used for validation
-pram.maxEpochs          = 500;
-pram.miniBatchSize      = 1024;
+pram.maxEpochs          = 1000;
+pram.miniBatchSize      = 1024*8;
 pram.initLearningRate   = .1;
 pram.learningRateFactor = .1;
 pram.dropPeriod         = round(pram.maxEpochs/4);
 pram.l2reg              = 0.0001;
-pram.excEnv             = 'cpu';          % {'gpu','multi-gpu','cpu'}
+pram.excEnv             = 'gpu';          % {'gpu','multi-gpu','cpu'}
 
 %% 
 [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram);                     % read DEEP data
-[H ,I ,J ,Jwf,Iwf]      = f_preproc(H0,I0,J0,Jwf,Iwf,pram);     % pre-process H, and J
+[H ,I ,J ,Jwf,Iwf,pram] = f_preproc(H0,I0,J0,Jwf,Iwf,pram);     % pre-process H, and J
 
 [XTr,YTr,XTst,YTst]     = f_getTrData(H,J,pram);                % generate training data
 lgraph                  = f_genDeepMlp(pram,size(XTr));         % MLP + DEEP-fwd model
@@ -48,4 +48,4 @@ options                 = f_set_training_options(pram,XTst,YTst); % train MLP
 [net, tr_info]          = trainNetwork(XTr,YTr,lgraph,options); % "
 Ipred                   = f_inferMlp(net,XTst,pram);            % infer MLP
 
-f_pltResults(I0,Iwf,Jwf,Ipred,pram);                       % visualize results
+f_pltResults(I,Iwf,Jwf,Ipred,pram);                       % visualize results

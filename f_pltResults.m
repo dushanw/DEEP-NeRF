@@ -7,9 +7,13 @@ function f_pltResults(Igt,Iwf,Jwf,Ipred,pram)
   Nt        = pram.Nt;
 
   Jwf4plt   = imresize(Jwf,[NyI NxI],"box"); 
-  Ipredplt  = Ipred*n^2;
+  Ipredplt  = Ipred;
+  Ipredplt(Ipredplt<0)=0;
 
-  imagesc([Jwf4plt Ipredplt; Igt Iwf],[0 1]);axis image
+  imagesc([rescale(Jwf4plt)...
+           rescale(Ipredplt);...
+           rescale(Igt)...
+           rescale(Iwf)],[0 1]);axis image
   title("J-wf(top-left), I-pred(top-right),I-gt(bottom-left), I-wf(bottom-right)")
 
 end
