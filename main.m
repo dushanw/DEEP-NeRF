@@ -6,12 +6,15 @@
 % Data  :DEEP patterns (H0), DEEP images(J0), Wide-feild image (Jwf)
 
 clc;close all;clear all
-addpath('././_custom_layers/')
+addpath('./_custom_layers/')
 
 %% parameter initialization
 % data parameter
-pram.datasetId  = 'data-20220608';             %{'sim-cell','data-20220608'}
-pram.rsf        = 1/8;                         % down samples the system (H,I,J) by this factor
+pram.datasetId  = 'data-20220621-cells';      % {'sim-cell',
+                                              %  'data-20220608',
+                                              %  'data-20220621-reflection',
+                                              %  'data-20220621-cells'}
+pram.rsf        = 1/8;                        % down samples the system (H,I,J) by this factor
 pram.NyI        = 128; 
 pram.NxI        = 128; 
 pram.n          = 4;
@@ -24,14 +27,14 @@ pram.maxI       = 1e3;                        % photons per petterned-image per 
 pram.maxJ       = pram.maxI*pram.n^2;         % photons per petterned-image per pixel on the detector
 
 % MLP embedding parameters 
-pram.Nmap       = 256;
+pram.Nmap       = 512;
 pram.Bscal      = .1;
 
 % MLP training parameter
 pram.fracTr             = 1;              % ratio of training data used for validation
 pram.maxEpochs          = 1000;
 pram.miniBatchSize      = 1024*8;
-pram.initLearningRate   = .1;
+pram.initLearningRate   = 1;
 pram.learningRateFactor = .1;
 pram.dropPeriod         = round(pram.maxEpochs/4);
 pram.l2reg              = 0.0001;
