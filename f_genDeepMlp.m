@@ -14,8 +14,10 @@ function lgraph = f_genDeepMlp(pram,mlp_input_size)
       reluLayer
       fullyConnectedLayer(Nmap)
       reluLayer
+      %fullyConnectedLayer((2*n)^2,"Name","fc_out")
+      %codedApertureLayer_v2(2,Nt,n,'coded_aperture')
       fullyConnectedLayer(n^2,"Name","fc_out")
-      codedApertureLayer(2,Nt,'coded_aperture');
+      codedApertureLayer(2,Nt,n,'coded_aperture');
       %aproxPoissonLayer('noise',avgI)
       regressionLayer
       %maeRegressionLayer('regression')
