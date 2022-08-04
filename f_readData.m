@@ -148,6 +148,39 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       pram.NxJ  = pram.NxI/pram.n;  
       pram.rsf  = 1;
       pram.codeBook = data.codeBook;
+             
+    case 'data-20220730'
+      %%
+      if pram.Nt>32
+        pram.Nt   = 32;
+      end
+      load ./_data/data-20220730.mat
+      data.I_rsf8 = data.I_rsf8(1:600,401:600+400,:);
+      data.H_rsf8 = data.H_rsf8(1:600,401:600+400,:);
+
+      NyI       = 128;
+      NxI       = NyI;
+      I0        = imresize(double(mean(data.I_rsf8,3)),[NyI NxI]);
+      H0        = imresize(double(data.H_rsf8(:,:,1:pram.Nt)),[NyI NxI]);      
+      J0        = imresize(double(data.I_rsf8(:,:,1:pram.Nt)),[NyI NxI]);
+
+%       I0        = imresize(double(mean(data.I_rsf8,3)),[NyI NxI],"box");
+%       H0        = imresize(double(data.H_rsf8(:,:,1:pram.Nt)),[NyI NxI],"box");      
+%       J0        = imresize(double(data.I_rsf8(:,:,1:pram.Nt)),[NyI NxI],"box");
+      J0        = imresize(J0,1/pram.n,"box")*pram.n^2;% bin
+      %%Jwf      = imresize(I0,1/pram.n,"box")*pram.n^2;% bin      
+      % 128x128
+      %J0       = imresize(data.Ir1_8(:,:,1:pram.Nt),1/4,"box");
+      % 64x64
+      %J0       = imresize(data.Ir1_8(:,:,1:pram.Nt),1/4,"box");
+      
+      Jwf       = mean(J0,3);% bin
+      Iwf       = I0;
+      pram.NyI  = size(I0,1);
+      pram.NxI  = size(I0,2);
+      pram.NyJ  = pram.NyI/pram.n; 
+      pram.NxJ  = pram.NxI/pram.n;  
+      pram.rsf  = 1;
   end
 
 end

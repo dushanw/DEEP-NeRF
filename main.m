@@ -10,18 +10,19 @@ addpath('./_custom_layers/')
 
 %% parameter initialization
 % data parameter
-pram.datasetId  = 'sim-cell-wf';              
+pram.datasetId  = 'data-20220730';              
                                               % {'sim-cell',
                                               %  'sim-cell-wf',
                                               %  'data-20220608',
                                               %  'data-20220621-reflection',
                                               %  'data-20220621-cells',
                                               %  'data-20220707-cells-and-r6g'
-                                              %  'data-20220722'}
+                                              %  'data-20220722'
+                                              %  'data-20220730'}
 pram.rsf        = 1/8;                        % down samples the system (H,I,J) by this factor
 pram.NyI        = 128; 
 pram.NxI        = 128; 
-pram.n          = 1;
+pram.n          = 2;
 pram.NyJ        = pram.NyI/pram.n; 
 pram.NxJ        = pram.NxI/pram.n;  
 pram.Nt         = 32;
