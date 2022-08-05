@@ -9,41 +9,7 @@ clc;close all;clear all
 addpath('./_custom_layers/')
 
 %% parameter initialization
-% data parameter
-pram.datasetId  = 'data-20220730';              
-                                              % {'sim-cell',
-                                              %  'sim-cell-wf',
-                                              %  'data-20220608',
-                                              %  'data-20220621-reflection',
-                                              %  'data-20220621-cells',
-                                              %  'data-20220707-cells-and-r6g'
-                                              %  'data-20220722'
-                                              %  'data-20220730'}
-pram.rsf        = 1/8;                        % down samples the system (H,I,J) by this factor
-pram.NyI        = 128; 
-pram.NxI        = 128; 
-pram.n          = 2;
-pram.NyJ        = pram.NyI/pram.n; 
-pram.NxJ        = pram.NxI/pram.n;  
-pram.Nt         = 32;
-
-% fwd-model parameters for simulated data
-pram.maxI       = 1e5;                        % photons per petterned-image per pixel on the sample 
-pram.maxJ       = pram.maxI*pram.n^2;         % photons per petterned-image per pixel on the detector
-
-% MLP embedding parameters 
-pram.Nmap       = 512;
-pram.Bscal      = 1;
-
-% MLP training parameter
-pram.fracTr             = 1;              % ratio of training data used for validation
-pram.maxEpochs          = 1000;
-pram.miniBatchSize      = 128;
-pram.initLearningRate   = 1;
-pram.learningRateFactor = .1;
-pram.dropPeriod         = round(pram.maxEpochs/4);
-pram.l2reg              = 0.0001;
-pram.excEnv             = 'cpu';          % {'gpu','multi-gpu','cpu'}
+pram = f_praminit();
 
 %% read and pre-process data
 [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram);                     % read DEEP data
@@ -52,6 +18,7 @@ pram.excEnv             = 'cpu';          % {'gpu','multi-gpu','cpu'}
 
 %% traditional y=Ax reconstruction
 Xhat = f_dirInv_YeqAX(J,H,pram);
+imagesc([rescale(imresize(Jwf,pram.n)) rescale(Xhat) rescale(I0)]);axis image
 
 %% NeRF (MPL) reconstruction no-preproc
 [XTr,YTr,XTst,YTst]     = f_getTrData(H0,J0,pram);              % generate no-preproc training data 
