@@ -22,6 +22,6 @@ function Xhat = f_dirInv_YeqAX(J,H,pram)
   %Xhat = (A'*A)\(A'*J(:));       % solve reduced systems by At
   Xhat = reshape(Xhat,Ny0,Nx0);
 
-  %Xhat(Xhat<0)=0;
+  Xhat(Xhat<0)=0;
   imagesc(Xhat);axis image
 end
