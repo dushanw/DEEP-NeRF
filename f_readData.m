@@ -34,6 +34,24 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       Jwf       = poissrnd(Jwf*pram.maxJ)/pram.maxJ;% add noise
       % equivelent wf image with the expsure time of all patterns
       Iwf       = poissrnd(I0*pram.maxI*pram.Nt)/(pram.maxI*pram.Nt);% add noise
+    case 'sim-cell-with-bg'  
+      %% 
+      I0        = rescale(imread("_data/cell.tif"));
+      I0        = imresize(I0,0.25);
+      I0_bg     = imgaussfilt(I0,10) + 0.1;
+      pram.NyI  = size(I0,1);
+      pram.NxI  = size(I0,2);
+      pram.rsf  =1;
+
+      % fwd model      
+      H0        = rand([pram.NyI pram.NxI pram.Nt/2])>0.5;
+      H0        = cat(3,H0,~H0);
+      J0        = imresize(I0.*H0+I0_bg,1/pram.n,"box")*pram.n^2;% modualtion and bin
+      Jwf       = imresize(I0+I0_bg    ,1/pram.n,"box")*pram.n^2;% wide-feild and bin
+      J0        = poissrnd(J0 *pram.maxJ)/pram.maxJ;% add noise
+      Jwf       = poissrnd(Jwf*pram.maxJ)/pram.maxJ;% add noise
+      % equivelent wf image with the expsure time of all patterns
+      Iwf       = poissrnd(I0*pram.maxI*pram.Nt)/(pram.maxI*pram.Nt);% add noise
     case 'data-20220608'      
       %%
       load ./_data/data-20220608.mat
@@ -155,8 +173,8 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
         pram.Nt   = 32;
       end
       load ./_data/data-20220730.mat
-      data.I_rsf8 = data.I_rsf8(1:600,401:600+400,:);
-      data.H_rsf8 = data.H_rsf8(1:600,401:600+400,:);
+      data.I_rsf8 = data.I_rsf8(1:640,401:640+400,:);
+      data.H_rsf8 = data.H_rsf8(1:640,401:640+400,:);
 
       NyI       = 128;
       NxI       = NyI;
