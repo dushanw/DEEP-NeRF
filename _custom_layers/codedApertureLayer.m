@@ -2,11 +2,12 @@ classdef codedApertureLayer < nnet.layer.Layer
   
     properties
         Nt        
+        A_exPSF
+        A_emPSF
     end
 
     properties (Learnable)
-        A_exPSF
-        A_emPSF
+
     end
     
     methods

@@ -10,6 +10,7 @@ addpath('./_custom_layers/')
 
 %% parameter initialization
 pram = f_praminit();
+pram.datasetId  = 'sim-cell-with-bg';
 
 %% read and pre-process data
 [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram);                     % read DEEP data
@@ -19,6 +20,44 @@ pram = f_praminit();
 %% traditional y=Ax reconstruction
 Xhat = f_dirInv_YeqAX(J,H,pram);
 imagesc([rescale(imresize(Jwf,pram.n)) rescale(Xhat) rescale(I0)]);axis image
+
+%% no-H-information reconstruction for optical sectioning (only for n=1)
+Xhat_t          = abs(J0 - mean(J0,3))*2;
+
+% fcn_input_size  = [size(Xhat_t,1) size(Xhat_t,2) size(Xhat_t,3)-1]
+fcn_input_size  = [size(Xhat_t,1) size(Xhat_t,2) 1]
+lgraph          = f_genDeepFcn(pram,fcn_input_size);
+t=1;
+for i=1:pram.Nt
+  Xhat_t_avg(:,:,i) = mean(Xhat_t(:,:,setdiff(1:pram.Nt,i)),3); 
+end
+
+for i=1:pram.Nt
+  for j=setdiff(1:pram.Nt,i)
+    XTr(:,:,1,t)    = Xhat_t_avg(:,:,i);
+    YTr(:,:,1,t)    = Xhat_t_avg(:,:,j);
+    t=t+1;
+  end
+end
+rand_inds       = randperm(size(XTr,4));
+XTst            = XTr(:,:,:,rand_inds(1:8));
+YTst            = YTr(:,:,:,rand_inds(1:8));
+XTr             = XTr(:,:,:,rand_inds(9:end));
+YTr             = YTr(:,:,:,rand_inds(9:end));
+
+pram.initLearningRate   = .1;
+pram.maxEpochs      = 100;
+pram.miniBatchSize  = 8;
+pram.dropPeriod     = round(pram.maxEpochs/4);
+options             = f_set_training_options(pram,XTst,YTst);
+[net, tr_info]      = trainNetwork(XTr,YTr,lgraph,options);
+Ypred               = activations(net,XTst,'Conv20');
+
+imagesc([rescale(XTst(:,:,1)) rescale(Ypred(:,:,1,1)); rescale(mean(Ypred,4)) rescale(I0)]);axis image
+
+imagesc([rescale(Xhat_t(:,:,1)) rescale(mean(Xhat_t,3)) rescale(I0)]);axis image
+
+
 
 %% NeRF (MPL) reconstruction no-preproc
 [XTr,YTr,XTst,YTst]     = f_getTrData(H0,J0,pram);              % generate no-preproc training data 
