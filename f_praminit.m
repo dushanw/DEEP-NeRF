@@ -3,7 +3,7 @@
 function pram = f_praminit()
 
     % data parameter
-    pram.datasetId  = 'sim-cell-with-bg';              
+    pram.datasetId  = 'data-20220730';              
                                                   % {'sim-cell',
                                                   %  'sim-cell-wf','sim-cell-with-bg'
                                                   %  'data-20220608',
@@ -18,10 +18,10 @@ function pram = f_praminit()
     pram.n          = 1;
     pram.NyJ        = pram.NyI/pram.n; 
     pram.NxJ        = pram.NxI/pram.n;  
-    pram.Nt         = 32;
+    pram.Nt         = 16;
     
     % fwd-model parameters for simulated data
-    pram.maxI       = 2e1;                       % photons per petterned-image per pixel on the sample 
+    pram.maxI       = 1e2;                        % photons per petterned-image per pixel on the sample 
     pram.maxJ       = pram.maxI*pram.n^2;         % photons per peterned-image per pixel on the detector
     
     % MLP embedding parameters 

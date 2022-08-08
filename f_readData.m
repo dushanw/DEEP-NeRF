@@ -107,6 +107,22 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       pram.NyJ  = pram.NyI/pram.n; 
       pram.NxJ  = pram.NxI/pram.n;  
       pram.rsf  = 1;
+    case 'data-20220621-tissue'
+      %%
+      load ./_data/data-20220621_tissue.mat
+      I0        = imresize(mean(data.Irt,3),1/4,"box");
+      H0        = imresize(data.H(:,:,1:pram.Nt),1/4,"box");      
+      % 512x512
+      J0        = imresize(data.Irt(:,:,1:pram.Nt),1/4,"box");
+      J0        = imresize(J0,1/pram.n,"box")*pram.n^2;
+      
+      Jwf       = mean(J0,3);% bin
+      Iwf       = I0;
+      pram.NyI  = size(I0,1);
+      pram.NxI  = size(I0,2);
+      pram.NyJ  = pram.NyI/pram.n; 
+      pram.NxJ  = pram.NxI/pram.n;  
+      pram.rsf  = 1;
       
     case 'data-20220707-cells-and-r6g'
       %%
