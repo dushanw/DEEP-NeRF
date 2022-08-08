@@ -3,7 +3,6 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
 
   switch pram.datasetId       
     case 'sim-cell-wf'  
-      %% 
       I0        = rescale(imread("_data/cell.tif"));
       I0        = imresize(I0,0.25);
       pram.NyI  = size(I0,1);
@@ -19,7 +18,6 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       % equivelent wf image with the expsure time of all patterns
       Iwf       = poissrnd(I0*pram.maxI*pram.Nt)/(pram.maxI*pram.Nt);% add noise
     case 'sim-cell'  
-      %% 
       I0        = rescale(imread("_data/cell.tif"));
       I0        = imresize(I0,0.25);
       pram.NyI  = size(I0,1);
@@ -35,7 +33,6 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       % equivelent wf image with the expsure time of all patterns
       Iwf       = poissrnd(I0*pram.maxI*pram.Nt)/(pram.maxI*pram.Nt);% add noise
     case 'sim-cell-with-bg'  
-      %% 
       I0        = rescale(imread("_data/cell.tif"));
       I0        = imresize(I0,0.25);
       I0_bg     = imgaussfilt(I0,10) + 0.1;
@@ -53,7 +50,6 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       % equivelent wf image with the expsure time of all patterns
       Iwf       = poissrnd(I0*pram.maxI*pram.Nt)/(pram.maxI*pram.Nt);% add noise
     case 'data-20220608'      
-      %%
       load ./_data/data-20220608.mat
       I0        = imresize(mean(data.Ir1,3),1/8,"box");
       H0        = imresize(data.Hr1(:,:,1:pram.Nt),1/8,"box");
@@ -69,7 +65,6 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       pram.NxJ  = pram.NxI/pram.n;  
       pram.rsf  = 1;
     case 'data-20220621-reflection'
-      %%
       load ./_data/data-20220621-reflection.mat
       I0        = imresize(mean(Data.Irt,3),1/4,"box");
       H0        = imresize(Data.H(:,:,1:pram.Nt),1/4,"box");
@@ -87,7 +82,6 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       pram.NxJ  = pram.NxI/pram.n;  
       pram.rsf = 1; 
     case 'data-20220621-cells'
-      %%
       load ./_data/data-20220621-cells.mat
       I0        = imresize(mean(data.Irt,3),1/4,"box");
       H0        = imresize(data.H(:,:,1:pram.Nt),1/4,"box");      
@@ -108,7 +102,6 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       pram.NxJ  = pram.NxI/pram.n;  
       pram.rsf  = 1;
     case 'data-20220621-tissue'
-      %%
       load ./_data/data-20220621_tissue.mat
       I0        = imresize(mean(data.Irt,3),1/4,"box");
       H0        = imresize(data.H(:,:,1:pram.Nt),1/4,"box");      
@@ -125,7 +118,6 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       pram.rsf  = 1;
       
     case 'data-20220707-cells-and-r6g'
-      %%
       if pram.Nt>32
         pram.Nt   = 32;
       end
@@ -150,7 +142,6 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       pram.rsf  = 1;
       pram.codeBook = data.codeBook;
     case 'data-20220722'
-      %%
       if pram.Nt>32
         pram.Nt   = 32;
       end
@@ -184,7 +175,6 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       pram.codeBook = data.codeBook;
              
     case 'data-20220730'
-      %%
       if pram.Nt>32
         pram.Nt   = 32;
       end

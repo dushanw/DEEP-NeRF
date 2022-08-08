@@ -28,14 +28,24 @@ function pram = f_praminit()
     pram.Nmap       = 512;
     pram.Bscal      = 1;
     
-    % MLP training parameter
-    pram.fracTr             = 1;              % ratio of training data used for validation
-    pram.maxEpochs          = 1000;
-    pram.miniBatchSize      = 128;
+    % MLP training parameter <uncomment when running NeRF>
+%     pram.fracTr             = 1;                  % ratio of training data used for validation
+%     pram.maxEpochs          = 1000;
+%     pram.miniBatchSize      = 128;
+%     pram.initLearningRate   = 1;
+%     pram.learningRateFactor = .1;
+%     pram.dropPeriod         = round(pram.maxEpochs/4);
+%     pram.l2reg              = 0.0001;
+%     pram.excEnv             = 'cpu';              % {'gpu','multi-gpu','cpu'}
+
+    % N2N-FCN training parameter <uncomment when running N2N>
+    pram.fracTr             = 1;                  % ratio of training data used for validation
+    pram.maxEpochs          = 100;
+    pram.miniBatchSize      = 32;
     pram.initLearningRate   = 1;
     pram.learningRateFactor = .1;
     pram.dropPeriod         = round(pram.maxEpochs/4);
     pram.l2reg              = 0.0001;
-    pram.excEnv             = 'cpu';          % {'gpu','multi-gpu','cpu'}
+    pram.excEnv             = 'cpu';              % {'gpu','multi-gpu','cpu'}
 
 end

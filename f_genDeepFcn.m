@@ -1,5 +1,6 @@
-function lgraph = f_genDeepFcn(pram,fcn_input_size)
+function lgraph = f_genDeepFcn(pram)
      
+  fcn_input_size = pram.n2n_input_size;
   net0_dncnn = denoisingNetwork('dncnn');
   lgraph = layerGraph(net0_dncnn.Layers);
     
