@@ -207,8 +207,9 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       pram.rsf  = 1;
     case 'two-photon-mk-20181010'
       for i=1:128
-        J0(:,:,i)=imread('./MouseKidney_roi1010_ParRand_rsf8_lipid0p15_RedCh_part2.tif',i);
+        J0(:,:,i)=imread('./_data/MouseKidney_roi1010_ParRand_rsf8_lipid0p15_RedCh_part2.tif',i);
       end
+      J0  = imresize(double(J0),[pram.NyI pram.NxI]);
       I0  = mean(J0,3);
       Iwf = I0;
       Jwf = I0;
@@ -226,8 +227,8 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       end
       load ./_data/dmd_exp_tfm_mouse_20201224.mat
 
-      H0        = double(Data.Ex(:,:,1:pram.Nt));
-      J0        = double(Data.anml1_r1_sf(:,:,1:pram.Nt));
+      H0        = imresize(double(Data.Ex(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
+      J0        = imresize(double(Data.anml1_r1_sf(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
       I0        = double(mean(J0,3));
       
       J0        = imresize(J0,1/pram.n,"box")*pram.n^2;% bin

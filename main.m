@@ -16,6 +16,8 @@ addpath('./_custom_layers/')
 
 %% parameter initialization
 pram = f_praminit();
+pram.NyI        = 64;
+pram.NxI        = 64;
 pram.datasetId  = 'two-photon-bv-20201224';
  
 %% read and pre-process data
