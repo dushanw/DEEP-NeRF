@@ -16,7 +16,7 @@ addpath('./_custom_layers/')
 
 %% parameter initialization
 pram = f_praminit();
-pram.datasetId  = 'data-20220730';
+pram.datasetId  = 'two-photon-bv-20201224';
  
 %% read and pre-process data
 [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram);                     % read DEEP data

@@ -113,8 +113,8 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       Iwf       = I0;
       pram.NyI  = size(I0,1);
       pram.NxI  = size(I0,2);
-      pram.NyJ  = pram.NyI/pram.n; 
-      pram.NxJ  = pram.NxI/pram.n;  
+      pram.NyJ  = pram.NyI/pram.n;
+      pram.NxJ  = pram.NxI/pram.n;
       pram.rsf  = 1;
       
     case 'data-20220707-cells-and-r6g'
@@ -200,6 +200,40 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       
       Jwf       = mean(J0,3);% bin
       Iwf       = I0;
+      pram.NyI  = size(I0,1);
+      pram.NxI  = size(I0,2);
+      pram.NyJ  = pram.NyI/pram.n; 
+      pram.NxJ  = pram.NxI/pram.n;  
+      pram.rsf  = 1;
+    case 'two-photon-mk-20181010'
+      for i=1:128
+        J0(:,:,i)=imread('./MouseKidney_roi1010_ParRand_rsf8_lipid0p15_RedCh_part2.tif',i);
+      end
+      I0  = mean(J0,3);
+      Iwf = I0;
+      Jwf = I0;
+      H0  = J0;
+
+      pram.NyI  = size(I0,1);
+      pram.NxI  = size(I0,2);
+      pram.NyJ  = pram.NyI/pram.n; 
+      pram.NxJ  = pram.NxI/pram.n;  
+      pram.rsf  = 1;
+      pram.note = 'Dummy H0 (i.e. H0 = J0)';      
+    case 'two-photon-bv-20201224'
+      if pram.Nt>255
+        pram.Nt   = 255;
+      end
+      load ./_data/dmd_exp_tfm_mouse_20201224.mat
+
+      H0        = double(Data.Ex(:,:,1:pram.Nt));
+      J0        = double(Data.anml1_r1_sf(:,:,1:pram.Nt));
+      I0        = double(mean(J0,3));
+      
+      J0        = imresize(J0,1/pram.n,"box")*pram.n^2;% bin
+      Jwf       = mean(J0,3);% bin
+      Iwf       = I0;
+
       pram.NyI  = size(I0,1);
       pram.NxI  = size(I0,2);
       pram.NyJ  = pram.NyI/pram.n; 
