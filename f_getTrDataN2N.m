@@ -1,7 +1,7 @@
 
 function [XTr,YTr,XTst,YTst] = f_getTrDataN2N(J0,pram)
 
-  Xhat_t          = abs(J0 - mean(J0,3))*2;    
+  Xhat_t          = abs(J0 - mean(J0,3))*2;
   Mt              = pram.n2n_Mt;
   %fcn_input_size = [size(Xhat_t,1) size(Xhat_t,2) Mt];
   fcn_input_size  = pram.n2n_input_size;

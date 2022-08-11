@@ -18,7 +18,8 @@ addpath('./_custom_layers/')
 pram = f_praminit();
 pram.NyI        = 64;
 pram.NxI        = 64;
-pram.datasetId  = 'two-photon-bv-20201224';
+pram.Nt         = 16;
+pram.datasetId  = 'sim-cell-with-bg';
  
 %% read and pre-process data
 [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram);                     % read DEEP data
@@ -27,7 +28,8 @@ pram.datasetId  = 'two-photon-bv-20201224';
 
 %% traditional y=Ax reconstruction
 Xhat = f_dirInv_YeqAX(J,H,pram);
-imagesc([rescale(imresize(Jwf,pram.n)) rescale(Xhat) rescale(I0)]);axis image
+imagesc([rescale(imresize(Jwf,pram.n)) rescale(Xhat);...
+         rescale(mean(abs(J-mean(J,3)),3))            rescale(I0)]);axis image
 
 %% N2N: no-H-information reconstruction for optical sectioning (only for n=1)
 pram.n2n_Mt           = pram.Nt - 3;
@@ -43,6 +45,25 @@ Ypred                 = activations(net,cat(4,XTst,XTr),'Conv20');
 
 imagesc([rescale(YTr(:,:,1,1)) rescale(mean(YTr,4)) rescale(Xhat);...
          rescale(Ypred(:,:,1,1)) rescale(mean(Ypred,4)) rescale(I0)]);axis image
+title('(1)Xhat_t (2)mean(Xhat_t) (3)Xhat-inv (4)Ypred1 (5)mean(YpredAll) (6)I0')
+set(gca,'fontsize',8)
+saveas(gcf,['./__results/2022-08-08_noise2noise/' pram.datasetId '_Nt-' num2str(pram.Nt) '_Mt-' num2str(Mt) '.fig'])
+
+%% N2N: with-H-information reconstruction (not implemented yet!!!)
+pram.n2n_Mt           = pram.Nt/2;
+pram.n2n_input_size   = [pram.NyJ pram.NxJ pram.Nt];
+pram.NXTr_max         = 1e3;
+
+[XTr,YTr,XTst,YTst]   = f_getTrDataN2N_withInv(J,H,pram);
+lgraph                = f_genDeepFcn(pram);
+options               = f_set_training_options(pram,XTst,YTst);
+[net, tr_info]        = trainNetwork(XTr,YTr,lgraph,options);
+
+Ypred                 = activations(net,cat(4,XTst,XTr),'Conv20');
+Ypred_all             = activations(net,J,'Conv20');
+
+imagesc([rescale(mean(YTr,4))     rescale(Xhat)          rescale(Ypred_all) ;...
+         rescale(Ypred(:,:,1,1))  rescale(mean(Ypred,4)) rescale(I0)]       );axis image
 title('(1)Xhat_t (2)mean(Xhat_t) (3)Xhat-inv (4)Ypred1 (5)mean(YpredAll) (6)I0')
 set(gca,'fontsize',8)
 saveas(gcf,['./__results/2022-08-08_noise2noise/' pram.datasetId '_Nt-' num2str(pram.Nt) '_Mt-' num2str(Mt) '.fig'])

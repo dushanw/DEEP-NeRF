@@ -2,7 +2,7 @@
 function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
 
   switch pram.datasetId       
-    case 'sim-cell-wf'  
+    case 'sim-cell-wf'
       I0        = rescale(imread("_data/cell.tif"));
       I0        = imresize(I0,0.25);
       pram.NyI  = size(I0,1);
@@ -35,7 +35,7 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
     case 'sim-cell-with-bg'  
       I0        = rescale(imread("_data/cell.tif"));
       I0        = imresize(I0,0.25);
-      I0_bg     = imgaussfilt(I0,10) + 0.1;
+      I0_bg     = imgaussfilt(I0,10) + 0.5;
       pram.NyI  = size(I0,1);
       pram.NxI  = size(I0,2);
       pram.rsf  =1;
@@ -228,7 +228,8 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       load ./_data/dmd_exp_tfm_mouse_20201224.mat
 
       H0        = imresize(double(Data.Ex(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
-      J0        = imresize(double(Data.anml1_r1_sf(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
+      %J0       = imresize(double(Data.anml1_r1_sf(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
+      J0        = imresize(double(Data.anml1_r2_200um(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
       I0        = double(mean(J0,3));
       
       J0        = imresize(J0,1/pram.n,"box")*pram.n^2;% bin
