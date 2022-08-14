@@ -19,7 +19,7 @@ pram = f_praminit();
 pram.NyI        = 64;
 pram.NxI        = 64;
 pram.Nt         = 32;
-pram.datasetId  = 'two-photon-bv-20201224';
+pram.datasetId  = 'two-photon-bv-20201224-anml1_r2_200um';
  
 %% read and pre-process data
 [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram);                     % read DEEP data

@@ -3,15 +3,7 @@
 function pram = f_praminit()
 
     % data parameter
-    pram.datasetId  = 'data-20220730';              
-                                                  % {'sim-cell',
-                                                  %  'sim-cell-wf','sim-cell-with-bg'
-                                                  %  'data-20220608',
-                                                  %  'data-20220621-reflection',
-                                                  %  'data-20220621-cells',
-                                                  %  'data-20220707-cells-and-r6g'
-                                                  %  'data-20220722'
-                                                  %  'data-20220730'}
+    pram.datasetId  = 'data-20220730';            % look at all cases in f_readData(pram)
     pram.rsf        = 1/8;                        % down samples the system (H,I,J) by this factor
     pram.NyI        = 16; 
     pram.NxI        = 16; 

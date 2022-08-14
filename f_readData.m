@@ -221,17 +221,31 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       pram.NxJ  = pram.NxI/pram.n;  
       pram.rsf  = 1;
       pram.note = 'Dummy H0 (i.e. H0 = J0)';      
-    case 'two-photon-bv-20201224'
+    case 'two-photon-bv-20201224-anml1_r1_sf'
       if pram.Nt>255
         pram.Nt   = 255;
       end
       load ./_data/dmd_exp_tfm_mouse_20201224.mat
-
       H0        = imresize(double(Data.Ex(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
+      J0        = imresize(double(Data.anml1_r1_sf(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
+      I0        = double(mean(J0,3));
       
-      J0       = imresize(double(Data.anml1_r1_sf(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
-      %J0        = imresize(double(Data.anml1_r2_200um(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
-      
+      J0        = imresize(J0,1/pram.n,"box")*pram.n^2;% bin
+      Jwf       = mean(J0,3);% bin
+      Iwf       = I0;
+
+      pram.NyI  = size(I0,1);
+      pram.NxI  = size(I0,2);
+      pram.NyJ  = pram.NyI/pram.n; 
+      pram.NxJ  = pram.NxI/pram.n;  
+      pram.rsf  = 1;
+    case 'two-photon-bv-20201224-anml1_r2_200um'
+      if pram.Nt>255
+        pram.Nt   = 255;
+      end
+      load ./_data/dmd_exp_tfm_mouse_20201224.mat
+      H0        = imresize(double(Data.Ex(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
+      J0        = imresize(double(Data.anml1_r2_200um(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
       I0        = double(mean(J0,3));
       
       J0        = imresize(J0,1/pram.n,"box")*pram.n^2;% bin
