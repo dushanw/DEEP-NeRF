@@ -70,7 +70,7 @@ options               = f_set_training_options(pram,XTst,YTst);
 
 Ypred                 = activations(net,XTst(:,:,:,1),'Conv20');
 
-f_pltResults_withInv(Iwf,J0,Xhat_inv,Ytr(:,:,:,1),mean(YTr,4),Ypred,pram);
+f_pltResults_withInv(Iwf,J0,Xhat_inv,YTr(:,:,:,1),mean(YTr,4),Ypred,pram);
 
 %% ---- temp : for not all Nt input mode ----------------------------------- 
 % Ypred               = activations(net,cat(4,XTst,XTr),'Conv20');
