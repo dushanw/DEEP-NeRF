@@ -10,4 +10,8 @@ function lgraph = f_genDeepFcn(pram)
   lgraph = removeLayers(lgraph,{lgraph.Layers(13:55).Name});  
   lgraph = connectLayers(lgraph,'ReLU4','BNorm19');
 
+%   lgraph = addLayers(lgraph,reluLayer('Name','ReLU_last'));
+%   lgraph = disconnectLayers(lgraph,'Conv20','FinalRegressionLayer');
+%   lgraph = connectLayers(lgraph,'Conv20','ReLU_last');
+%   lgraph = connectLayers(lgraph,'ReLU_last','FinalRegressionLayer');
 end

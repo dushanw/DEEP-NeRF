@@ -1,7 +1,7 @@
 
 function [XTr,YTr,XTst,YTst] = f_getTrDataN2N_withInv(J,H,pram)
   
-  Mt            = pram.Nt/2;  
+  Mt            = pram.n2n_Mt;  
   inds          = nchoosek(1:pram.Nt,Mt);
   if size(inds,1)>pram.NXTr_max
     temp        = randperm(size(inds,1));
@@ -10,7 +10,8 @@ function [XTr,YTr,XTst,YTst] = f_getTrDataN2N_withInv(J,H,pram)
 
   t               = 1;  
   for i=1:size(inds,1)        
-      XTr(:,:,inds(i,:),t)  = J(:,:,inds(i,:));
+      %XTr(:,:,inds(i,:),t) = J(:,:,inds(i,:));
+      XTr(:,:,:,t)          = J;
       YTr(:,:,:,t)          = f_dirInv_YeqAX(J(:,:,inds(i,:)),...
                                              H(:,:,inds(i,:)),...
                                              pram);

@@ -228,8 +228,10 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       load ./_data/dmd_exp_tfm_mouse_20201224.mat
 
       H0        = imresize(double(Data.Ex(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
-      %J0       = imresize(double(Data.anml1_r1_sf(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
-      J0        = imresize(double(Data.anml1_r2_200um(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
+      
+      J0       = imresize(double(Data.anml1_r1_sf(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
+      %J0        = imresize(double(Data.anml1_r2_200um(:,:,1:pram.Nt)),[pram.NyI pram.NxI]);
+      
       I0        = double(mean(J0,3));
       
       J0        = imresize(J0,1/pram.n,"box")*pram.n^2;% bin
