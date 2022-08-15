@@ -16,8 +16,8 @@ addpath('./_custom_layers/')
 
 %% parameter initialization
 pram = f_praminit();
-pram.NyI        = 64;
-pram.NxI        = 64;
+pram.NyI        = 128;
+pram.NxI        = 128;
 pram.Nt         = 32;
 pram.datasetId  = 'two-photon-bv-20201224-anml1_r2_200um';
  
@@ -28,7 +28,9 @@ pram.datasetId  = 'two-photon-bv-20201224-anml1_r2_200um';
 
 %% traditional y=Ax reconstruction
 Xhat_inv = f_dirInv_YeqAX(J,H,pram);
-imagesc([rescale(imresize(Jwf,pram.n)) rescale(Xhat_inv);...
+Xhat_inv_plt = Xhat_inv;
+Xhat_inv_plt(Xhat_inv_plt<0)=0;
+imagesc([rescale(imresize(Jwf,pram.n)) rescale(Xhat_inv_plt);...
          rescale(mean(abs(J-mean(J,3)),3))            rescale(I0)]);axis image
 
 %% N2N: no-H-information reconstruction for optical sectioning (only for n=1)
@@ -53,9 +55,9 @@ saveas(gcf,['./__results/2022-08-08_noise2noise/' pram.datasetId '_Nt-' num2str(
 %pram.n2n_Mt          = pram.Nt/2;
 pram.n2n_Mt           = pram.Nt-4;
 pram.n2n_input_size   = [pram.NyJ pram.NxJ pram.Nt];
-pram.NXTr_max         = 1e5;
+pram.NXTr_max         = 1e4;
 pram.excEnv           = 'gpu';
-pram.maxEpochs        = 40;
+pram.maxEpochs        = 12;
 pram.initLearningRate = 0.1;
 pram.dropPeriod       = round(pram.maxEpochs/4);
 pram.miniBatchSize    = 128;
