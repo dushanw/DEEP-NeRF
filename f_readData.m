@@ -204,6 +204,24 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       pram.NxI  = size(I0,2);
       pram.NyJ  = pram.NyI/pram.n; 
       pram.NxJ  = pram.NxI/pram.n;  
+      pram.rsf  = 1;        
+    case 'data_20220830_mk-volume'      
+      pram.Nt   = 16;      
+      load ./_data/data_20220830_mk-volume.mat
+     
+      pram.NyI  = data.pram.Ny/10;
+      pram.NxI  = data.pram.Nx/10;
+      pram.NzI  = 41;
+      pram.n    = 1;
+
+      I0        = imresize(double(data.I_wf),0.1);
+      H0        = -1;
+      J0        = imresize(double(data.I_si),0.1);
+      
+      Jwf       = I0;
+      Iwf       = I0;      
+      pram.NyJ  = pram.NyI/pram.n; 
+      pram.NxJ  = pram.NxI/pram.n;  
       pram.rsf  = 1;
     case 'two-photon-mk-20181010'
       for i=1:128
