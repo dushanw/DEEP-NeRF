@@ -91,6 +91,29 @@ f_pltResults_withInv(Iwf,J0,Xhat_inv,YTr(:,:,:,1),mean(YTr,4),Ypred,pram);
 %              num2str(pram.n2n_Mt) 'AllInput_sf.fig'])
 % -----------------------------------------------------------------
 
+%% N2N: with-H-information deep2deep reconsturction
+pram.rec_method       = 'withH_deep2deep';
+pram.n2n_Mt           = pram.Nt-pram.Nt/2;
+pram.n2n_input_size   = [pram.NyJ pram.NxJ 1];
+pram.NXTr_max         = 1e4;
+pram.excEnv           = 'gpu';
+pram.maxEpochs        = 12;
+pram.initLearningRate = 0.1;
+pram.dropPeriod       = round(pram.maxEpochs/4);
+pram.miniBatchSize    = 128;
+
+[XTr,YTr,XTst,YTst]   = f_getTrDataN2N_withInv(J,H,pram);
+lgraph                = f_genDeepFcn(pram);
+
+YTst                  = Xhat_inv;% validate with the inv reconstruction
+XTst                  = XTst(:,:,:,1);
+options               = f_set_training_options(pram,XTst,YTst);
+[net, tr_info]        = trainNetwork(XTr,YTr,lgraph,options);
+
+Ypred                 = activations(net,XTst(:,:,:,1),'Conv20');
+
+f_pltResults_withInv(Iwf,J0,Xhat_inv,YTr(:,:,:,1),mean(YTr,4),Ypred,pram);
+
 %% NeRF (MPL) reconstruction no-preproc
 [XTr,YTr,XTst,YTst]     = f_getTrData(H0,J0,pram);              % generate no-preproc training data 
 lgraph                  = f_genDeepMlp(pram,size(XTr));         % MLP + DEEP-fwd model
