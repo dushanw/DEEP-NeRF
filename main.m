@@ -20,7 +20,7 @@ pram.NyI        = 128;
 pram.NxI        = 128;
 pram.Nt         = 32;
 pram.datasetId  = 'data_20220830_mk-volume';
-pram.rec_method = 'withoutH_yhatMt2deep_paired_withWf';
+pram.rec_method = 'withoutH_yhatMt2deep_unpaired';
  
 %% read and pre-process data
 [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram);                     % read DEEP data
@@ -35,7 +35,7 @@ imagesc([rescale(imresize(Jwf,pram.n)) rescale(Xhat_inv_plt);...
          rescale(mean(abs(J-mean(J,3)),3))            rescale(I0)]);axis image
 
 %% N2N: no-H-information reconstruction for optical sectioning (only for n=1)
-pram.n2n_Mt           = pram.Nt - 4;
+pram.n2n_Mt           = pram.Nt - 3;
 pram.n2n_input_size   = [pram.NyJ pram.NxJ pram.n2n_Mt];
 
 [XTr,YTr,XTst,YTst]  = f_getTrDataN2N(J0,Jwf,pram);
