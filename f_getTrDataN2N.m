@@ -1,5 +1,5 @@
 
-function [XTr,YTr,XTst,YTst] = f_getTrDataN2N(J0,pram)
+function [XTr,YTr,XTst,YTst] = f_getTrDataN2N(J0,Jwf,pram)
 
   switch pram.rec_method
     case 'withoutH_yhatMt2deep_unpaired'
@@ -20,6 +20,26 @@ function [XTr,YTr,XTst,YTst] = f_getTrDataN2N(J0,pram)
       end    
     case 'withoutH_yhatMt2deep_paired'
       Xhat_t          = abs(J0 - mean(J0,4))*2;
+      Mt              = pram.n2n_Mt;
+      %fcn_input_size = [size(Xhat_t,1) size(Xhat_t,2) Mt];
+      fcn_input_size  = pram.n2n_input_size;
+      
+      t               = 1;
+      half_Nt         = pram.Nt/2;
+      half_Mt         = Mt/2;
+      for i=1:half_Nt
+        inds = setdiff(1:half_Nt,i);
+        inds = nchoosek(inds,half_Mt);
+        for j=1:size(inds,1)
+          for k=1:pram.NzI
+            XTr(:,:,:,t)  = squeeze(Xhat_t(:,:,k,[inds(j,:) inds(j,:)+half_Nt]));
+            YTr(:,:,:,t)  = squeeze(mean(Xhat_t(:,:,k,[i i+half_Nt]),4));
+            t             = t+1
+          end
+        end
+      end    
+    case 'withoutH_yhatMt2deep_paired_withWf'
+      Xhat_t          = abs(J0 - Jwf/2);
       Mt              = pram.n2n_Mt;
       %fcn_input_size = [size(Xhat_t,1) size(Xhat_t,2) Mt];
       fcn_input_size  = pram.n2n_input_size;

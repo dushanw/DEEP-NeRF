@@ -214,12 +214,20 @@ function [H0,I0,J0,Jwf,Iwf,pram] = f_readData(pram)
       pram.NzI  = 41;
       pram.n    = 1;
 
-      I0        = imresize(double(data.I_wf),0.1);
       H0        = -1;
-      J0        = imresize(double(data.I_si),0.1);
+      I0        = imresize(double(data.I_si),0.1);
+      Iwf       = imresize(double(data.I_wf),0.1);
+
+      for t=1:8
+        I0_now        = I0(:,:,:,1:8)+I0(:,:,:,9:16);
+        I0(:,:,:,t)   = I0(:,:,:,t)  /max(I0_now(:));
+        I0(:,:,:,8+t) = I0(:,:,:,8+t)/max(I0_now(:));  
+      end
+      Iwf             = Iwf/max(Iwf(:));
+
+      J0        = I0;
+      Jwf       = Iwf;
       
-      Jwf       = I0;
-      Iwf       = I0;      
       pram.NyJ  = pram.NyI/pram.n; 
       pram.NxJ  = pram.NxI/pram.n;  
       pram.rsf  = 1;
